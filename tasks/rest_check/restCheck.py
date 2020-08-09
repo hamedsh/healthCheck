@@ -8,11 +8,12 @@ ERRORS = {
 }
 
 
-def call_rest(url: str, method: str, timeout):
+def call_api(url: str, method: str, timeout, body: object = None):
     res = {'status': 0, 'message': '', 'result': None}
+    method = method.upper()
     try:
         st = time.perf_counter()
-        res_req = requests.request(method.upper(), url, timeout=timeout)
+        res_req = requests.request(method, url, body=body, timeout=timeout)
         load_time = round(time.perf_counter() - st)
         res_req.raise_for_status()
         res['result'] = res_req.content

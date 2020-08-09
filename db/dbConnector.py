@@ -16,7 +16,6 @@ class HealthCheckDB:
         SQLITE: 'sqlite:///{DB}'
     }
     db_engine = None
-
     def __init__(self, dbtype: str, username='', password='', dbname=''):
         dbtype = dbtype.lower()
         if dbtype in self.DB_ENGINE.keys():
@@ -53,26 +52,52 @@ class HealthCheckDB:
         try:
             metadata.create_all(self.db_engine)
         except Exception as e:
-            return -1, e.__str__()
-        return 0, ''
+            raise Exception(e)
+        return 0
 
     def execute_query(self, query):
         if query == '': return 0
         with self.db_engine.connect() as connection:
             try:
-                connection.execute(query)
+                r = connection.execute(query)
             except Exception as e:
-                return -1, e.__str__()
-        return 0
+                raise Exception(e)
+        return r
+
+    def execute_select(self, query):
+        if query == '': return None
+        with self.db_engine.connect() as connection:
+            try:
+                r = connection.execute(query)
+                return list(r)
+            except Exception as e:
+                raise Exception(e)
+        return r, ''
 
     def add_service(self, name, type: int, metadata):
-        queries = QUERIES['add_service'].format()
+        query = QUERIES['add_service'].format(name=name, type=type, metadata = metadata.__str__())
+        try:
+            res = self.execute_query(query)
+        except Exception as e:
+            raise Exception(e)
+        return res.lastrowid, ''
 
+    def get_services(self, type: int = None):
+        if type:
+            query = QUERIES['get_active_services_type'].format(type)
+        else:
+            query = QUERIES['get_active_services']
+        try:
+            res = self.execute_select(query)
+            return res
+        except Exception as e:
+            raise Exception(e)
 
 #     todo: db initialize
 
-a= HealthCheckDB(SQLITE, dbname='healthcheck.db')
-a.create_db_tables()
 
+# a= HealthCheckDB(SQLITE, dbname='healthcheck.db')
+# print(a.add_service('service2', 1, '{}'))
+# print(a.get_services())
 
 

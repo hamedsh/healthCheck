@@ -1,6 +1,6 @@
 import yaml
 
-with open('config.yml') as config_file:
+with open('config/config.yml') as config_file:
     configs = yaml.load(config_file, Loader=yaml.FullLoader)
 
 with configs["celery_config"] as celery_config:
@@ -14,6 +14,6 @@ beat_schedule = {
     'check_heartbeat_every_5_second': {
         'task': 'tasks.heartBeat',
         'schedule': 5.0,
-        'name': 'heartbeat'
+        'name': '_heartbeat'
     }
 }
