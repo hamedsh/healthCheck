@@ -1,6 +1,6 @@
-from flask import Flask, jsonify
+from flask import Flask
 from db.dbConnector import HealthCheckDB, SQLITE
-from tasks.beat import Beater
+from beat import Beater
 
 app = Flask(__name__)
 

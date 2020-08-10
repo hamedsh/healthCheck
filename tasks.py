@@ -1,10 +1,13 @@
 from celery import Celery
 
-import config.CeleryConfig as celeryConfig
 import datetime
+import os
+import sys
 
-from tasks.rest_check.restCheck import call_api
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from rest_check.restCheck import call_api
 
+import celeryConfig
 app = Celery('apiHealth')
 app.config_from_object(celeryConfig)
 

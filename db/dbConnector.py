@@ -34,6 +34,7 @@ class HealthCheckDB:
                          Column('name', String, unique=True, nullable=False),
                          Column('type', Integer, ForeignKey(f'{SERVICE_TYPES}.id'), nullable=False),
                          Column('metadata', String, nullable=False),
+                         Column('repeat_period', Integer, default=5,nullable=False),
                          Column('status', Integer, ForeignKey(f'{SERVICE_STATUS}.id'), nullable=False)
                          )
         tasks = Table(TASKS, metadata,
@@ -51,9 +52,13 @@ class HealthCheckDB:
                              )
         try:
             metadata.create_all(self.db_engine)
+
         except Exception as e:
             raise Exception(e)
         return 0
+
+    def seed(self):
+        q = ['insert into ']
 
     def execute_query(self, query):
         if query == '': return 0
@@ -74,8 +79,8 @@ class HealthCheckDB:
                 raise Exception(e)
         return r, ''
 
-    def add_service(self, name, type: int, metadata):
-        query = QUERIES['add_service'].format(name=name, type=type, metadata = metadata.__str__())
+    def add_service(self, name, type: int, repeat_period, metadata):
+        query = QUERIES['add_service'].format(name=name, type=type, repeat_period=repeat_period, metadata = metadata.__str__())
         try:
             res = self.execute_query(query)
         except Exception as e:
@@ -97,7 +102,8 @@ class HealthCheckDB:
 
 
 # a= HealthCheckDB(SQLITE, dbname='healthcheck.db')
-# print(a.add_service('service2', 1, '{}'))
+# a.create_db_tables()healthCheck
+# print(a.add_service('service2', 1, 5, "{'url': 'www.google.com', 'method': 'POST', 'timeout': 5}"))
 # print(a.get_services())
 
 
