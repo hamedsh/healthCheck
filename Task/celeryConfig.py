@@ -1,7 +1,7 @@
 import yaml
 import os
-# config_path = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[:-1])
-config_path = os.path.dirname(os.path.abspath(__file__))
+config_path = '/'.join(os.path.dirname(os.path.abspath(__file__)).split('/')[:-1])
+# config_path = os.path.dirname(os.path.abspath(__file__))
 
 with open(f'{config_path}/config/config.yml') as config_file:
     configs = yaml.load(config_file, Loader=yaml.FullLoader)

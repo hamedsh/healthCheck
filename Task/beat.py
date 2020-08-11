@@ -1,8 +1,8 @@
 from redbeat import RedBeatSchedulerEntry as Entry
 
-import tasks
+from Task import tasks
 from db.Service import Service
-from celeryConfig import redbeat_key_prefix
+from Task.celeryConfig import redbeat_key_prefix
 
 BASE_KEY = 'beater_{}'
 
@@ -16,11 +16,10 @@ class Beater:
             except:
                 if create:
                     if service.type == 1:
-                        # entry = Entry(BASE_KEY.format(service.name), f'tasks.{service.type_name}', service.repeat_period,
-                        #           args=[service.metadata['url'], service.metadata['method'],
-                        #                 service.metadata['timeout'], service.metadata.get('body', None)],
-                        #               app=tasks.app)
-                        entry = Entry(f'urlCheck_1', 'tasks.urlSpeed', 5, args=['GET', 'www.google.com', 5, '1'], app=tasks.app)
+                        entry = Entry(BASE_KEY.format(service.name), f'tasks.{service.type_name}', service.repeat_period,
+                                  args=[service.metadata['url'], service.metadata['method'],
+                                        service.metadata['timeout'], service.metadata.get('body', None)],
+                                      app=tasks.app)
                         entry.save()
                         print(entry.key)
         return 0

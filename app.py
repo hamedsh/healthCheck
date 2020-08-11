@@ -1,6 +1,6 @@
 from flask import Flask
 from db.dbConnector import HealthCheckDB, SQLITE
-from beat import Beater
+from Task.beat import Beater
 
 app = Flask(__name__)
 
